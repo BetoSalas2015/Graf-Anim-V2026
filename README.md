@@ -1,4 +1,4 @@
-# Separando la responsabilidad del dibujo (versión 0.0.2)
+# Creando la interfaz de Usuario (versión 0.0.3)
 
 ## Compilar y ejecutar
 
@@ -9,22 +9,30 @@ Desde la carpeta de trabajo:
 
 ---
 
-En esta versión se refactoriza la solución para **separar la ventana (UI/contendor)** de la **lógica de dibujo (renderizado)**, aplicando una organización más limpia y escalable.
+En esta versión el proyecto evoluciona de “mostrar una ventana” a **interactuar con el usuario**: se construye una interfaz gráfica (AWT) para capturar parámetros y disparar el dibujo desde el componente responsable del renderizado.
 
 ## ¿Qué se actualiza?
 
-- Se crea una nueva clase dedicada al dibujo (por ejemplo, `Dibujo`).
-- La nueva clase de dibujo se convierte en un componente gráfico reutilizable al **extender `Canvas`**.
-- La lógica de renderizado (lo que antes vivía en `paint()` dentro de la ventana) **se mueve al `paint()` del `Canvas`**.
-- La clase `Ventana` deja de “saber dibujar” directamente:
-	- Se elimina su método `paint()`.
-	- En su lugar, instancia el componente de dibujo y lo monta en la interfaz.
-- El componente de dibujo se agrega a la ventana usando el sistema de layout de AWT (por defecto `BorderLayout`), colocándolo en la zona **Center**.
+- Se define un prototipo de interfaz con tres zonas:
+	- **Entrada de datos** (parte superior)
+	- **Área de dibujo** (centro)
+	- **Acción principal** (parte inferior)
+- Se agregan componentes AWT para captura de coordenadas y ejecución:
+	- `Panel` para agrupar controles
+	- `Label` para identificar campos
+	- `TextField` para capturar valores
+	- `Button` para ejecutar “graficar”
+- Se organiza la ventana con `BorderLayout` usando regiones (por ejemplo: **North / Center / South**) para separar responsabilidades visuales.
+- Se incorpora manejo de eventos para el botón:
+	- Se implementa un `ActionListener` mediante una clase interna.
+	- Al hacer click, se leen los valores de los `TextField` y se convierten a enteros.
+- Se implementa el “puente” entre la UI y el dibujo:
+	- El componente de dibujo expone un método para recibir los parámetros.
+	- Se llama a `repaint()` para forzar el repintado y reflejar el nuevo estado.
 
 ## Mejoras logradas
 
-- **Separación de responsabilidades (SRP)**: `Ventana` se enfoca en ciclo de vida/UI; `Dibujo` se enfoca en renderizado.
-- **Código más mantenible**: ahora es más fácil modificar el dibujo sin tocar la ventana.
-- **Reutilización**: el `Canvas` puede reutilizarse en otras ventanas o interfaces.
-- **Extensibilidad**: prepara el proyecto para agregar nuevos elementos (controles, más componentes, diferentes escenas) sin volver “monolítica” la clase de la ventana.
-- **Mejor estructura para futuras secciones**: esta base facilita integrar interacción, parámetros, múltiples figuras y migraciones posteriores (por ejemplo, a Java2D).
+- **Interactividad real**: el usuario controla qué se dibuja a partir de datos ingresados.
+- **Flujo claro de actualización**: *capturar datos → asignar al modelo de dibujo → repaint → paint*.
+- **Mejor separación de roles**: la ventana coordina la interacción; el componente de dibujo renderiza.
+- **Escalabilidad**: la estructura queda lista para agregar más controles (colores, múltiples figuras, listas de puntos, carga de archivos, etc.) sin desordenar la aplicación.
