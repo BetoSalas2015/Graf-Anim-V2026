@@ -1,4 +1,4 @@
-# Creando la interfaz de Usuario (versión 0.0.3)
+# Trabajando con Puntos (versión 0.0.4)
 
 ## Compilar y ejecutar
 
@@ -9,30 +9,26 @@ Desde la carpeta de trabajo:
 
 ---
 
-En esta versión el proyecto evoluciona de “mostrar una ventana” a **interactuar con el usuario**: se construye una interfaz gráfica (AWT) para capturar parámetros y disparar el dibujo desde el componente responsable del renderizado.
+En esta versión se deja de manejar las coordenadas como variables sueltas (`x1`, `y1`, `x2`, `y2`) y se migra el proyecto a un modelo más orientado a objetos usando **Puntos** como entidad.
 
 ## ¿Qué se actualiza?
 
-- Se define un prototipo de interfaz con tres zonas:
-	- **Entrada de datos** (parte superior)
-	- **Área de dibujo** (centro)
-	- **Acción principal** (parte inferior)
-- Se agregan componentes AWT para captura de coordenadas y ejecución:
-	- `Panel` para agrupar controles
-	- `Label` para identificar campos
-	- `TextField` para capturar valores
-	- `Button` para ejecutar “graficar”
-- Se organiza la ventana con `BorderLayout` usando regiones (por ejemplo: **North / Center / South**) para separar responsabilidades visuales.
-- Se incorpora manejo de eventos para el botón:
-	- Se implementa un `ActionListener` mediante una clase interna.
-	- Al hacer click, se leen los valores de los `TextField` y se convierten a enteros.
-- Se implementa el “puente” entre la UI y el dibujo:
-	- El componente de dibujo expone un método para recibir los parámetros.
-	- Se llama a `repaint()` para forzar el repintado y reflejar el nuevo estado.
+- Se introduce una nueva clase de dominio llamada `Punto`.
+	- Encapsula las coordenadas `x` e `y`.
+	- Incluye constructor y métodos de acceso (getters/setters).
+- El flujo de la interfaz cambia:
+	- En lugar de enviar números sueltos al dibujo, se construyen objetos `Punto` a partir de los valores capturados en los `TextField`.
+	- El componente de dibujo recibe ahora **dos objetos punto** (punto inicial y punto final) para trazar la línea.
+- El componente de dibujo se adapta al nuevo modelo:
+	- Sustituye variables primitivas por referencias a `Punto`.
+	- El renderizado consulta las coordenadas a través de los getters del objeto.
+- Se refuerza el control de estado inicial:
+	- Al arrancar la aplicación, todavía no hay puntos definidos.
+	- Se agrega una validación antes de dibujar para evitar errores cuando los puntos aún no existen.
 
 ## Mejoras logradas
 
-- **Interactividad real**: el usuario controla qué se dibuja a partir de datos ingresados.
-- **Flujo claro de actualización**: *capturar datos → asignar al modelo de dibujo → repaint → paint*.
-- **Mejor separación de roles**: la ventana coordina la interacción; el componente de dibujo renderiza.
-- **Escalabilidad**: la estructura queda lista para agregar más controles (colores, múltiples figuras, listas de puntos, carga de archivos, etc.) sin desordenar la aplicación.
+- **Mejor diseño OO**: las coordenadas pasan a ser un objeto con significado (no solo números).
+- **Legibilidad y mantenimiento**: el código es más claro al hablar en términos de “punto 1” y “punto 2”.
+- **Extensibilidad**: facilita evolucionar a colecciones de puntos (polígonos), transformaciones, o integración posterior con `Point` de Java2D.
+- **Robustez al iniciar**: se evita que el primer repintado intente dibujar con datos inexistentes.

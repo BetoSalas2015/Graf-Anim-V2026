@@ -1,3 +1,6 @@
+/** 
+ *      Vrentana.java
+ */
 import java.awt.*;
 import java.awt.event.*;
 
@@ -66,12 +69,12 @@ public class Ventana extends Frame {
     private class BotónGraficar implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            int x1 = Integer.parseInt(txtPunto1x.getText());
-            int y1 = Integer.parseInt(txtPunto1y.getText());
-            int x2 = Integer.parseInt(txtPunto2x.getText());
-            int y2 = Integer.parseInt(txtPunto2y.getText());
+            Punto punto1 = new Punto(Integer.parseInt(txtPunto1x.getText()),
+                                    Integer.parseInt(txtPunto1y.getText()));
+            Punto punto2 = new Punto(Integer.parseInt(txtPunto2x.getText()), 
+                                     Integer.parseInt(txtPunto2y.getText()));
             
-            dibujo.asignaPuntos(x1, y1, x2, y2);
+            dibujo.asignaPuntos(punto1, punto2);
             dibujo.repaint();
         }
     }
