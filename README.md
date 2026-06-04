@@ -1,4 +1,4 @@
-# Trabajando con Puntos (versión 0.0.4)
+# Graficando múltiples Puntos (versión 0.0.5)
 
 ## Compilar y ejecutar
 
@@ -9,26 +9,24 @@ Desde la carpeta de trabajo:
 
 ---
 
-En esta versión se deja de manejar las coordenadas como variables sueltas (`x1`, `y1`, `x2`, `y2`) y se migra el proyecto a un modelo más orientado a objetos usando **Puntos** como entidad.
+En esta versión el proyecto deja de trabajar con **dos puntos** y evoluciona a un modelo que permite capturar y graficar **múltiples puntos** (una secuencia) para formar una figura/polígono.
 
 ## ¿Qué se actualiza?
 
-- Se introduce una nueva clase de dominio llamada `Punto`.
-	- Encapsula las coordenadas `x` e `y`.
-	- Incluye constructor y métodos de acceso (getters/setters).
-- El flujo de la interfaz cambia:
-	- En lugar de enviar números sueltos al dibujo, se construyen objetos `Punto` a partir de los valores capturados en los `TextField`.
-	- El componente de dibujo recibe ahora **dos objetos punto** (punto inicial y punto final) para trazar la línea.
-- El componente de dibujo se adapta al nuevo modelo:
-	- Sustituye variables primitivas por referencias a `Punto`.
-	- El renderizado consulta las coordenadas a través de los getters del objeto.
-- Se refuerza el control de estado inicial:
-	- Al arrancar la aplicación, todavía no hay puntos definidos.
-	- Se agrega una validación antes de dibujar para evitar errores cuando los puntos aún no existen.
+- La interfaz cambia para capturar **un solo punto (x, y)** por vez.
+- Se agrega un botón para **“Agregar punto”** a una colección interna.
+- Se introduce una estructura de datos para almacenar puntos (por ejemplo, un **`Vector`** de puntos).
+	- Cada click en “Agregar punto” inserta un nuevo punto en la colección.
+- El botón “Graficar” ya no manda dos puntos: ahora manda **toda la colección** al componente de dibujo.
+- El componente de dibujo cambia su lógica de renderizado:
+	- Recorre la colección y dibuja segmentos entre el punto *i* y el punto *i+1*.
+	- Al final, cierra la figura uniendo el **último punto** con el **primero**.
 
 ## Mejoras logradas
 
-- **Mejor diseño OO**: las coordenadas pasan a ser un objeto con significado (no solo números).
-- **Legibilidad y mantenimiento**: el código es más claro al hablar en términos de “punto 1” y “punto 2”.
-- **Extensibilidad**: facilita evolucionar a colecciones de puntos (polígonos), transformaciones, o integración posterior con `Point` de Java2D.
-- **Robustez al iniciar**: se evita que el primer repintado intente dibujar con datos inexistentes.
+- **Mayor expresividad**: permite dibujar figuras formadas por varios vértices, no solo una línea.
+- **Modelo de datos escalable**: la colección de puntos habilita mejoras posteriores (edición de puntos, borrar, reordenar, cargar desde archivo, etc.).
+- **Separación más clara de responsabilidades**:
+	- La UI se encarga de capturar y acumular puntos.
+	- El componente de dibujo se encarga de renderizar la colección.
+- **Base para evolucionar a Java2D**: al manejar listas de puntos, es más natural migrar después a primitivas de dibujo más avanzadas y transformaciones.
