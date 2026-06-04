@@ -1,17 +1,17 @@
-/** 
- *      Vrentana.java
- */
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 
 public class Ventana extends Frame {
+
+    private Dibujo dibujo;
 
     // Constructor
     public Ventana() {
         super("Dibujo");
         setSize(400, 400);
         setVisible( true );
+        dibujo = new Dibujo();
+        add(dibujo, "Center");
 
         addWindowListener( new CloseWindow());
     }
@@ -25,12 +25,7 @@ public class Ventana extends Frame {
         }
     }
 
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g.drawLine(100, 100, 150, 150);
-        g2d.draw(new  Line2D.Float(210,210,260,260) );
-    }
+    
 
     public static void main(String[] args) {
         Ventana ventana = new Ventana();
