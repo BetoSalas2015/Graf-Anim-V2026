@@ -1,6 +1,4 @@
-/** 
- *      Vrentana.java
- */
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -12,7 +10,7 @@ public class Ventana extends Frame {
     private TextField txtPunto1x, txtPunto1y;
     private Label lblPunto1;
     private Button btnGraficar, btnAgregar;
-    private Vector<Punto> vectorPuntos;
+    private Vector<Point> vectorPuntos;
 
     // Constructor
     public Ventana() {
@@ -20,7 +18,7 @@ public class Ventana extends Frame {
         setSize(400, 400);
         setVisible( true );
 
-        vectorPuntos = new Vector<Punto>();
+        vectorPuntos = new Vector<Point>();
 
         // Interfaz de Usuario
         dibujo = new Dibujo();
@@ -78,9 +76,8 @@ public class Ventana extends Frame {
     
         @Override
         public void actionPerformed(ActionEvent e) {
-            vectorPuntos.add( new Punto(Integer.parseInt(txtPunto1x.getText()), 
+            vectorPuntos.add( new Point(Integer.parseInt(txtPunto1x.getText()), 
                                          Integer.parseInt(txtPunto1y.getText())));
-            System.out.println(txtPunto1x.getText() + "," + txtPunto1y.getText());
         }
     }
     
