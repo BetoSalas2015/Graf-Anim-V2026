@@ -1,4 +1,4 @@
-# Usando Java2D (versión 0.0.6)
+# Archivos (versión 0.0.7)
 
 ## Compilar y ejecutar
 
@@ -10,24 +10,28 @@ Desde la carpeta de trabajo:
 ---
 
 
-En esta versión el proyecto migra a **Java2D** para usar primitivas de dibujo más avanzadas y mejorar la calidad/consistencia del render.
+## Cambios y mejoras (v0.0.7)
+
+En esta versión se agrega **carga de puntos desde archivo** (I/O) para automatizar la captura de coordenadas.
 
 ### ¿Qué se actualiza?
 
-- Se utiliza **`Graphics2D`** (casting desde `Graphics`) para dibujar con la API Java2D.
-- Se crea el método **`planoCoordenado(Graphics gc)`** en `Dibujo` para dibujar un plano cartesiano:
-	- Fondo en color verde claro.
-	- Cálculo de `w` y `h` como mitades del ancho/alto del `Canvas`.
-	- **Traslación del origen** al centro del `Canvas` con `translate(w, h)`.
-	- Rejilla con líneas cada **20 px**.
-	- Ejes X/Y con mayor grosor y color más oscuro.
-- Los trazos pasan de `drawLine()` a `draw(...)` con **`Line2D`** y `setStroke(...)` para controlar el grosor.
-- Se reemplaza el objeto `Punto` del proyecto por **`java.awt.Point`** (Java2D):
-	- `Vector<Punto>`  `Vector<Point>`.
-	- Las líneas se dibujan usando el constructor `new Line2D.Float(Point p1, Point p2)`.
+- Se incorporan paquetes de **entrada/salida** y utilidades:
+	- `java.io.*` (por ejemplo, `FileReader`, `BufferedReader`).
+	- `java.util.*` (por ejemplo, `Vector`, `StringTokenizer`).
+- La UI agrega el botón **`btnCargar`** ("Cargar Puntos") y se deshabilita/retira el flujo manual de agregar puntos (por ejemplo, comentando `btnAgregar`).
+- Se implementa el manejador de eventos **`BotonCargar`** que:
+	- Inicializa `vectorPuntos = new Vector<Point>()` en cada carga.
+	- Abre el archivo **`coordenadas.txt`** con `BufferedReader(new FileReader("coordenadas.txt"))`.
+	- Lee el archivo línea por línea.
+	- Separa cada línea con `StringTokenizer` usando la coma `,` como delimitador.
+	- Convierte `x` e `y` a enteros y agrega cada punto a `vectorPuntos`.
+	- Cierra el flujo con `entrada.close()`.
+	- Envía el vector a `Dibujo` con `dibujo.asignaPuntos(vectorPuntos)` y repinta con `dibujo.repaint()`.
+- Se añade manejo de errores con `try/catch` para capturar `IOException` cuando el archivo no se pueda abrir/leer.
 
 ### Mejoras logradas
 
-- **Render más consistente** y con mayor control (grosor, color y primitivas 2D).
-- **Independencia del tamaño de la ventana**: al centrar el origen y recalcular el plano, el dibujo se adapta al redimensionamiento.
-- **Código más estándar** al usar clases nativas (`Point`, `Line2D`) en lugar de tipos propios.
+- **Captura reproducible**: permite cargar la misma figura/polígono múltiples veces sin reescribir puntos a mano.
+- **Separación de datos vs. UI**: las coordenadas quedan desacopladas de la interfaz (pueden versionarse y compartirse).
+- **Base para extensiones**: facilita añadir escalamiento, múltiples archivos, o validación de formato.
